@@ -1,13 +1,17 @@
 import streamlit as st
 from utils import generate_xiaohongshu
 
-st.header("AI 寫作助手 ✏️")
-with st.sidebar:
-    openai_api_key = st.text_input("請輸入OpenAI API密鑰: ", type="password")
-    st.markdown("[獲取OpenAI API密鑰](https://platform.openai.com/api-keys)")
+import os
 
-theme = st.text_input("主題")
+st.header("AI 職缺寫手 ✏️")
+# with st.sidebar:
+#     openai_api_key = st.text_input("請輸入OpenAI API密鑰: ", type="password")
+#     st.markdown("[獲取OpenAI API密鑰](https://platform.openai.com/api-keys)")
+
+theme = st.text_area("主題").strip()
 submit = st.button("開始寫作")
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 if submit and not openai_api_key:
     st.info("請輸入你的OpenAI API密鑰")
@@ -17,6 +21,7 @@ if submit and not theme:
     st.stop()
 if submit:
     with st.spinner("AI正在努力創作中，請稍等..."):
+        theme = theme + "以上，請設計求職文宣。"
         result = generate_xiaohongshu(theme, openai_api_key)
     st.divider()
     left_column, right_column = st.columns(2)
